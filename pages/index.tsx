@@ -1,5 +1,5 @@
 import Link from 'next/link';
-// import Loader from '../components/loader';
+import Loader from '../pages/components/loader';
 
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
         <Link href="/invoices"><button>Invoices</button></Link>
         <Link href="/reports"><button>Reports</button></Link>
       </div>
-      {/* <Loader /> */}
+       <Loader /> 
     </div>
   );
 }
