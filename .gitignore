@@ -3,3 +3,10 @@
 node_modules
 .env
 .next
+.next
+cache
+server
+static
+trace
+build-manifest.json
+react-loadable-manifest.json
