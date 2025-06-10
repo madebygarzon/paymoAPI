@@ -142,9 +142,9 @@ Read more about [webhooks](sections/webhooks.md)
 
 Please tell us how we can make the API better. If you have a specific feature request or if you found a bug, please use GitHub issues. Fork these docs and send a pull request with improvements.
 
-## Node.js interface example
+## Next.js interface example
 
-An example interface using Node.js is provided in `app.js`. It exposes the following routes:
+This repository now uses the built-in API routes from Next.js. The following endpoints are available:
 
 * `/api/projects` – List all projects
 * `/api/entries` – Get time entries
@@ -160,11 +160,18 @@ An example interface using Node.js is provided in `app.js`. It exposes the follo
 npm install
 ```
 
-3. Start the server:
+3. Start the development server:
 
 ```bash
-node app.js
+npm run dev
 ```
 
-The server listens on port `3000` by default (override via the `PORT` variable). Visit `http://localhost:3000/` for a list of available routes.
+For a production build use:
+
+```bash
+npm run build
+npm start
+```
+
+The server listens on port `3000` by default. Visit `http://localhost:3000/` for a list of available routes.
 

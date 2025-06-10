@@ -1,18 +1,19 @@
 const request = require('request');
-const fs = require('fs');
 const email = 'johndoe@email.com';
 const password = 'secret';
 
-var formData = {
-    project_id: 123456,
-    file: fs.createReadStream('/path/to/file.jpg')
+var postData = {
+    client_id: 123456,
+    name: 'New Project',
+    description: 'Project added from API'
 };
 
 request.post(
     {
-        url: 'https://app.paymoapp.com/api/files',
-        formData: formData,
+        url: 'https://app.paymoapp.com/api/projects',
+        body: JSON.stringify(postData),
         headers: {
+            'Content-type': 'application/json',
             'Accept': 'application/json'
         },
         auth: {
@@ -22,9 +23,11 @@ request.post(
     },
     function (error, response, body) {
         if (!error) {
-            console.log('New file URL: ' + JSON.parse(body).files[0].file);
+            console.log('New project ID: ' + JSON.parse(body).projects[0].id);
         } else {
             console.log(error);
         }
     }
 );
+
+export {}

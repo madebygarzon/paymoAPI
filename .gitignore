@@ -3,7 +3,6 @@
 node_modules
 .env
 .next
-.next
 cache
 server
 static
