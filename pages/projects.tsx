@@ -10,6 +10,7 @@ type Project = {
   active: boolean
   budget_hours: number | null
   price_per_hour: number | null
+  project_fee: number | null
   time_worked: number
   recorded_time: number
   start_date: string | null
@@ -54,6 +55,7 @@ export default function Projects() {
               <th style={thStyle}>Start</th>
               <th style={thStyle}>End</th>
               <th style={thStyle}>Rate</th>
+              <th style={thStyle}>Fee</th>
               <th style={thStyle}>Time Worked</th>
               <th style={thStyle}>Budget Hours</th>
               <th style={thStyle}>Recorded Time</th>
@@ -80,6 +82,7 @@ export default function Projects() {
                 <td style={tdStyle}>{project.start_date ? new Date(project.start_date).toLocaleDateString() : '—'}</td>
                 <td style={tdStyle}>{project.end_date ? new Date(project.end_date).toLocaleDateString() : '—'}</td>
                 <td style={tdStyle}>{project.price_per_hour ?? '—'}</td>
+                <td style={tdStyle}>{project.project_fee?.toFixed(2) ?? '—'}</td>
                 <td style={tdStyle}>{(project.time_worked / 3600).toFixed(2)}</td>
                 <td style={tdStyle}>{project.budget_hours ?? '—'}</td>
                 <td style={tdStyle}>{(project.recorded_time / 3600).toFixed(2)}</td>
