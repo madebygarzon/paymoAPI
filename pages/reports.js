@@ -6,7 +6,7 @@ export default function Reports() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/reports')
+    fetch('/api/reports')
       .then((res) => {
         if (!res.ok) throw new Error('Request failed');
         return res.json();

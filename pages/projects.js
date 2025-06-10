@@ -6,7 +6,7 @@ export default function Projects() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/projects')
+    fetch('/api/projects')
       .then((res) => {
         if (!res.ok) throw new Error('Request failed');
         return res.json();

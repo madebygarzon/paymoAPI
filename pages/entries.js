@@ -6,7 +6,7 @@ export default function Entries() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/entries')
+    fetch('/api/entries')
       .then((res) => {
         if (!res.ok) throw new Error('Request failed');
         return res.json();

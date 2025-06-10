@@ -29,7 +29,7 @@ const port = process.env.PORT || 3000;
 nextApp.prepare().then(() => {
   const app = express();
 
-  app.get('/projects', async (req, res) => {
+  app.get('/api/projects', async (req, res) => {
     try {
       const { data } = await paymo.get('/projects');
       res.json(data.projects || data);
@@ -39,7 +39,7 @@ nextApp.prepare().then(() => {
     }
   });
 
-  app.get('/entries', async (req, res) => {
+  app.get('/api/entries', async (req, res) => {
     try {
       const { data } = await paymo.get('/entries');
       res.json(data.entries || data);
@@ -49,7 +49,7 @@ nextApp.prepare().then(() => {
     }
   });
 
-  app.get('/invoices', async (req, res) => {
+  app.get('/api/invoices', async (req, res) => {
     try {
       const { data } = await paymo.get('/invoices');
       res.json(data.invoices || data);
@@ -59,7 +59,7 @@ nextApp.prepare().then(() => {
     }
   });
 
-  app.get('/reports', async (req, res) => {
+  app.get('/api/reports', async (req, res) => {
     try {
       const { data } = await paymo.get('/reports');
       res.json(data.reports || data);

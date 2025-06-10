@@ -146,10 +146,10 @@ Please tell us how we can make the API better. If you have a specific feature re
 
 An example interface using Node.js is provided in `app.js`. It exposes the following routes:
 
-* `/projects` – List all projects
-* `/entries` – Get time entries
-* `/invoices` – Retrieve invoices
-* `/reports` – Generate reports
+* `/api/projects` – List all projects
+* `/api/entries` – Get time entries
+* `/api/invoices` – Retrieve invoices
+* `/api/reports` – Generate reports
 
 ### Usage
 
