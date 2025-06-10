@@ -6,7 +6,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { data } = await paymo.get('/projects');
+    const { data } = await paymo.get('/projects', {
+      params: { include: 'client' },
+    });
 
     const projects = (data as any).projects || data;
 
@@ -26,12 +28,19 @@ export default async function handler(
           // Ignore errors when computing time
         }
 
+        const projectRate = p.flat_billing ? p.price : p.price_per_hour;
+        const billingType =
+          p.billing_type ?? (p.billable ? (p.flat_billing ? 'flat' : 'pph') : 'non');
+
         return {
           ...p,
+          client_name: p.client?.name ?? '',
+          project_rate: projectRate ?? null,
           time_worked: timeWorked,
           recorded_time: timeWorked,
           start_date: p.start_date ?? p.created_on,
           end_date: p.end_date ?? null,
+          billing_type: billingType,
         };
       })
     );

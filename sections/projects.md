@@ -45,6 +45,10 @@ Example response for listing requests:
          "budget_hours": 0.25,
          "price_per_hour": 0,
          "billable": false,
+         "start_date": "2014-10-03",
+         "end_date": null,
+         "time_worked": 0,
+         "recorded_time": 0,
          "color": "#68BE5E",
          "users": [
             23129
@@ -67,6 +71,10 @@ Example response for listing requests:
          "budget_hours": 10,
          "price_per_hour": 30,
          "billable": true,
+         "start_date": "2014-12-01",
+         "end_date": "2014-12-15",
+         "time_worked": 3600,
+         "recorded_time": 3600,
          "color": "#E93A55",
          "users": [
             23129,
@@ -108,6 +116,10 @@ Example of response:
          "budget_hours": 0.25,
          "price_per_hour": 0,
          "billable": false,
+         "start_date": "2014-10-03",
+         "end_date": null,
+         "time_worked": 0,
+         "recorded_time": 0,
          "color": "#68BE5E",
          "users": [
             23129
@@ -367,6 +379,10 @@ flat_billing | boolean | For billable projects, if `true` the project is *flat r
 price_per_hour | decimal | For time & materials projects, the project hourly rate. Note: which hourly rate (user, task, project, or company) will be used for billing is defined by the `hourly_billing_mode` field.
 price | decimal | For flat rate project, the project flat rate. See [billing](#billing).
 estimated_price | decimal | For billable projects, the estimated project price consisting of the price of all its billable tasks (including flat rate tasks).
+start_date | date | _(read-only)_ Project start date if set
+end_date | date | _(read-only)_ Project end date if set
+time_worked | integer | _(read-only)_ Total time tracked for the project in seconds
+recorded_time | integer | _(read-only)_ Same as `time_worked`
 hourly_billing_mode | text | For time & materials projects, defines the hierarchy of rates used when deciding on the hourly rate for billing the time in the project. See [billing](#billing).
 budget_hours | decimal | Project budget in hours. If not set, the project will have unlimited budget hours.
 adjustable_hours | boolean | If `true` the budget_hours will be adjusted automatically based on tasks budget hours.
