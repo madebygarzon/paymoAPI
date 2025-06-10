@@ -9,6 +9,11 @@ type Project = {
   client_name: string
   active: boolean
   budget_hours: number | null
+  price_per_hour: number | null
+  time_worked: number
+  recorded_time: number
+  start_date: string | null
+  end_date: string | null
   billing_type: string
   updated_on: string
   color: string | null
@@ -46,8 +51,12 @@ export default function Projects() {
               <th style={thStyle}>Name</th>
               <th style={thStyle}>Code</th>
               <th style={thStyle}>Client</th>
-              <th style={thStyle}>Active</th>
+              <th style={thStyle}>Start</th>
+              <th style={thStyle}>End</th>
+              <th style={thStyle}>Rate</th>
+              <th style={thStyle}>Time Worked</th>
               <th style={thStyle}>Budget Hours</th>
+              <th style={thStyle}>Recorded Time</th>
               <th style={thStyle}>Billing</th>
               <th style={thStyle}>Updated</th>
             </tr>
@@ -68,10 +77,12 @@ export default function Projects() {
                 </td>
                 <td style={tdStyle}>{project.code}</td>
                 <td style={tdStyle}>{project.client_name}</td>
-                <td style={{ ...tdStyle, color: project.active ? 'green' : 'gray' }}>
-                  {project.active ? 'Yes' : 'No'}
-                </td>
+                <td style={tdStyle}>{project.start_date ? new Date(project.start_date).toLocaleDateString() : '—'}</td>
+                <td style={tdStyle}>{project.end_date ? new Date(project.end_date).toLocaleDateString() : '—'}</td>
+                <td style={tdStyle}>{project.price_per_hour ?? '—'}</td>
+                <td style={tdStyle}>{(project.time_worked / 3600).toFixed(2)}</td>
                 <td style={tdStyle}>{project.budget_hours ?? '—'}</td>
+                <td style={tdStyle}>{(project.recorded_time / 3600).toFixed(2)}</td>
                 <td style={tdStyle}>{project.billing_type.toUpperCase()}</td>
                 <td style={tdStyle}>{new Date(project.updated_on).toLocaleDateString()}</td>
               </tr>
