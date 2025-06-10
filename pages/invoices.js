@@ -7,6 +7,7 @@ export default function Invoices() {
 
   useEffect(() => {
     fetch('/api/invoices')
+
       .then((res) => {
         if (!res.ok) throw new Error('Request failed');
         return res.json();
