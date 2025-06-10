@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-export default function Entries() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+export default function Invoices() {
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/entries')
+    fetch('/api/invoices')
+
       .then((res) => {
         if (!res.ok) throw new Error('Request failed');
         return res.json();
@@ -17,7 +18,7 @@ export default function Entries() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Entries</h1>
+      <h1>Invoices</h1>
       <Link href="/"><button>Back</button></Link>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {!data && !error && <p>Loading...</p>}

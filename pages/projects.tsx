@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function Projects() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/projects')
