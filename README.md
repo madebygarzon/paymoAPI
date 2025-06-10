@@ -141,3 +141,30 @@ Read more about [webhooks](sections/webhooks.md)
 ## Help us make it better
 
 Please tell us how we can make the API better. If you have a specific feature request or if you found a bug, please use GitHub issues. Fork these docs and send a pull request with improvements.
+
+## Node.js interface example
+
+An example interface using Node.js is provided in `app.js`. It exposes the following routes:
+
+* `/projects` – List all projects
+* `/entries` – Get time entries
+* `/invoices` – Retrieve invoices
+* `/reports` – Generate reports
+
+### Usage
+
+1. Copy `.env.example` to `.env` and add your Paymo API key.
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the server:
+
+```bash
+node app.js
+```
+
+The server listens on port `3000` by default (override via the `PORT` variable). Visit `http://localhost:3000/` for a list of available routes.
+
