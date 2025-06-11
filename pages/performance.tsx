@@ -17,6 +17,7 @@ interface Perf {
 export default function Performance() {
   const [data, setData] = useState<Perf[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [filter, setFilter] = useState<string>('')
 
   useEffect(() => {
     fetch('/api/performance')
@@ -28,17 +29,37 @@ export default function Performance() {
       .catch((err) => setError(err.message))
   }, [])
 
+  const filteredData = data?.filter((p) =>
+    p.name.toLowerCase().includes(filter.toLowerCase())
+  )
+
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Performance</h1>
       <Link href="/"><button>Back</button></Link>
+
+      <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+        <input
+          type="text"
+          placeholder="Search project..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          style={{
+            padding: '6px 12px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            width: '250px'
+          }}
+        />
+      </div>
+
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {!data && !error && <Loader />}
-      {data && (
+      {filteredData && (
         <table style={{
           width: '100%',
           borderCollapse: 'collapse',
-          marginTop: '20px',
+          marginTop: '10px',
           fontSize: '14px'
         }}>
           <thead>
@@ -54,7 +75,7 @@ export default function Performance() {
             </tr>
           </thead>
           <tbody>
-            {data.map((p) => (
+            {filteredData.map((p) => (
               <tr key={p.project_id}>
                 <td style={tdStyle}>{p.name}</td>
                 <td style={tdStyle}>{p.total_logged_hours.toFixed(2)}</td>

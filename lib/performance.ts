@@ -80,8 +80,8 @@ export async function getProjectPerformance(
         cost_variance: budgetedCost - actualCost,
         cost_performance_index: costPerformanceIndex,
         status: actualCost <= budgetedCost
-          ? 'Dentro del presupuesto'
-          : 'Sobre el presupuesto',
+          ? 'Within budget'
+          : 'Over budget',
       };
       return summary;
     })
