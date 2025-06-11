@@ -161,6 +161,8 @@ This repository now uses the built-in API routes from Next.js. The following end
 npm install
 ```
 
+Tailwind CSS is included for styling. Global styles can be found in `styles/globals.css`.
+
 3. Start the development server:
 
 ```bash
