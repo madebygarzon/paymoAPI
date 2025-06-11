@@ -17,19 +17,19 @@ export default function Login() {
       const from = (router.query.from as string) || '/';
       router.push(from);
     } else {
-      setError('Contrase\u00f1a incorrecta');
+      setError('Invalid password. Please try again.');
     }
   };
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Autenticaci\u00f3n requerida</h1>
+      <h1>Enter a password</h1>
       <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px' }}>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Contrase\u00f1a"
+          placeholder="Password"
         />
         <button type="submit">Entrar</button>
       </form>
