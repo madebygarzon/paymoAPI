@@ -8,6 +8,7 @@ export interface ProjectPerformance {
   budgeted_cost: number;
   actual_cost: number;
   cost_variance: number;
+  cost_performance_index: number | null;
   status: string;
 }
 
@@ -67,6 +68,8 @@ export async function getProjectPerformance(
         : budgetHours * rate;
       const actualCost = loggedHours * rate;
 
+      const costPerformanceIndex = actualCost > 0 ? budgetedCost / actualCost : null;
+
       const summary: ProjectPerformance = {
         project_id: project.id,
         name: project.name,
@@ -75,6 +78,7 @@ export async function getProjectPerformance(
         budgeted_cost: budgetedCost,
         actual_cost: actualCost,
         cost_variance: budgetedCost - actualCost,
+        cost_performance_index: costPerformanceIndex,
         status: actualCost <= budgetedCost
           ? 'Dentro del presupuesto'
           : 'Sobre el presupuesto',
