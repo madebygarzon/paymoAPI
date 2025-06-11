@@ -12,8 +12,9 @@ export default function Home() {
         <Link href="/entries"><button>Entries</button></Link>
         <Link href="/invoices"><button>Invoices</button></Link>
         <Link href="/reports"><button>Reports</button></Link>
+        <Link href="/performance"><button>Performance</button></Link>
       </div>
-       <Loader /> 
+       <Loader />
     </div>
   );
 }

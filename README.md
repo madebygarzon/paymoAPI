@@ -150,6 +150,7 @@ This repository now uses the built-in API routes from Next.js. The following end
 * `/api/entries` – Get time entries
 * `/api/invoices` – Retrieve invoices
 * `/api/reports` – Generate reports
+* `/api/performance` – Project performance metrics
 
 ### Usage
 
