@@ -63,21 +63,34 @@ export default function Performance() {
           fontSize: '14px'
         }}>
           <thead>
-            <tr style={{ backgroundColor: '#f0f0f0' }}>
-              <th style={thStyle}>Project</th>
-              <th style={thStyle}>Logged Hours</th>
-              <th style={thStyle}>Budgeted Hours</th>
-              <th style={thStyle}>Budgeted Cost</th>
-              <th style={thStyle}>Actual Cost</th>
-              <th style={thStyle}>Cost Variance</th>
-              <th style={thStyle}>CPI</th>
-              <th style={thStyle}>Status</th>
+             <tr style={{ backgroundColor: '#f0f0f0' }}>
+              <th style={thStyle} title="Name of the project.">Project</th>
+              <th style={thStyle} title="Hours that have already been worked and logged for the project.">Logged Hours</th>
+              <th style={thStyle} title="Estimated hours allocated as the budget for the project. If '—' appears, no hours were defined.">Budgeted Hours</th>
+              <th style={thStyle} title="Estimated monetary budget for the project.">Budgeted Cost</th>
+              <th style={thStyle} title="Actual cost incurred so far (how much has been spent).">Actual Cost</th>
+              <th style={thStyle} title="Difference between budgeted and actual cost. Negative means overspending, positive means savings.">Cost Variance</th>
+              <th style={thStyle} title="Cost Performance Index. Calculated as: Budgeted Cost / Actual Cost. A value less than 1 indicates overspending.">CPI</th>
+              <th style={thStyle} title="Project status regarding budget: 'Over budget' (exceeded) or 'Within budget'.">Status</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.map((p) => (
               <tr key={p.project_id}>
-                <td style={tdStyle}>{p.name}</td>
+                <td style={tdStyle}>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      backgroundColor: p.status === 'Over budget' ? 'red' : 'green',
+                      marginRight: '8px',
+                    }}
+                    title={p.status === 'Over budget' ? 'Over budget' : 'Within budget'}
+                  ></span>
+                  {p.name}
+                </td>
                 <td style={tdStyle}>{p.total_logged_hours.toFixed(2)}</td>
                 <td style={tdStyle}>{p.budgeted_hours ?? '—'}</td>
                 <td style={tdStyle}>${p.budgeted_cost.toFixed(2)}</td>
