@@ -146,7 +146,8 @@ Please tell us how we can make the API better. If you have a specific feature re
 
 This repository now uses the built-in API routes from Next.js. The following endpoints are available:
 
-* `/api/projects` – List all projects
+* `/api/projects` – List active projects
+* `/api/projects/[id]` – Retrieve project details on demand
 * `/api/entries` – Get time entries
 * `/api/invoices` – Retrieve invoices
 * `/api/reports` – Generate reports
@@ -177,4 +178,8 @@ npm start
 ```
 
 The server listens on port `3000` by default. Visit `http://localhost:3000/` for a list of available routes.
+
+### Troubleshooting
+
+If any request responds with `401 Unauthorized`, verify that the `PAYMO_API_KEY` in your `.env` file is correct. The API routes rely on this key to authenticate with Paymo.
 

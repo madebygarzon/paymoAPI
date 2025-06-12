@@ -9,3 +9,4 @@ static
 trace
 build-manifest.json
 react-loadable-manifest.json
+tsconfig.tsbuildinfo
