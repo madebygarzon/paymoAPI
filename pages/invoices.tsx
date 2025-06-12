@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import LogoutButton from './components/logoutButton'
 
 type Invoice = {
   id: number
@@ -33,6 +34,7 @@ export default function Invoices() {
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Invoices</h1>
       <Link href="/"><button>Back</button></Link>
+      <LogoutButton />
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {!data && !error && <p>Loading...</p>}
       {data && (
