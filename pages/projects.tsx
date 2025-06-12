@@ -31,9 +31,10 @@ export default function Projects() {
 
   useEffect(() => {
     fetch('/api/projects')
-      .then((res) => {
-        if (!res.ok) throw new Error('Request failed')
-        return res.json()
+      .then(async (res) => {
+        const body = await res.json().catch(() => null)
+        if (!res.ok) throw new Error(body?.error || 'Request failed')
+        return body
       })
       .then(setData)
       .catch((err) => setError(err.message))
@@ -42,9 +43,11 @@ export default function Projects() {
   const loadDetails = (id: number) => {
     setLoadingId(id)
     fetch(`/api/projects/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Request failed')
-        return res.json()
+
+      .then(async (res) => {
+        const body = await res.json().catch(() => null)
+        if (!res.ok) throw new Error(body?.error || 'Request failed')
+        return body
       })
       .then((detail) => {
         setSelected(detail)

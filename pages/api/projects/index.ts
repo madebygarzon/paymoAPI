@@ -24,7 +24,12 @@ export default async function handler(
 
     res.status(200).json(summaries);
   } catch (err) {
+    const status = (err as any)?.response?.status ?? 500;
     console.error((err as Error).message);
-    res.status(500).json({ error: 'Failed to fetch projects' });
+    if (status === 401 || status === 403) {
+      res.status(401).json({ error: 'Unauthorized - check PAYMO_API_KEY' });
+    } else {
+      res.status(500).json({ error: 'Failed to fetch projects' });
+    }
   }
 }
