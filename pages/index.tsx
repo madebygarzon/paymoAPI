@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Loader from '../pages/components/loader';
+import LogoutButton from '../pages/components/logoutButton';
 
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
         <Link href="/invoices"><button className="px-4 py-2 border rounded">Invoices</button></Link>
         <Link href="/reports"><button className="px-4 py-2 border rounded">Reports</button></Link>
         <Link href="/performance"><button className="px-4 py-2 border rounded">Performance</button></Link>
+        <LogoutButton />
       </div>
        <Loader />
     </div>

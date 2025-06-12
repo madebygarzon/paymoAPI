@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Loader from "./components/loader";
+import LogoutButton from "./components/logoutButton";
 
 interface Perf {
   project_id: number;
@@ -43,6 +44,7 @@ export default function Performance() {
       <Link href="/">
         <button>Back</button>
       </Link>
+      <LogoutButton />
 
       <div style={{ marginTop: "20px", marginBottom: "10px", display: "flex" }}>
         <input

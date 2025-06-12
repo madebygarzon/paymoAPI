@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Loader from './components/loader'
+import LogoutButton from './components/logoutButton'
 
 type Entry = {
   id: number
@@ -31,6 +32,7 @@ export default function Entries() {
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Entries</h1>
       <Link href="/"><button>Back</button></Link>
+      <LogoutButton />
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {!data && !error && <Loader />}
       {data && (
