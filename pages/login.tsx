@@ -23,9 +23,9 @@ export default function Login() {
   };
 
   return (
-    <div className="p-5 font-sans">
+    <div className="p-5 font-sans min-h-screen flex flex-col items-center justify-center">
       <h1 className="text-xl font-bold mb-2">Enter your credentials</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 max-w-sm">
+      <form onSubmit={handleSubmit} className="flex gap-2 max-w-sm">
         <input
           type="password"
           value={password}
