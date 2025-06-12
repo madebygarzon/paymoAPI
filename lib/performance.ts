@@ -1,4 +1,4 @@
-import paymo from './paymo';
+import type { AxiosInstance } from 'axios';
 
 export interface ProjectPerformance {
   project_id: number;
@@ -20,6 +20,7 @@ export interface ProjectPerformance {
  * @returns Array of ProjectPerformance objects
  */
 export async function getProjectPerformance(
+  paymo: AxiosInstance,
   from?: string,
   to?: string
 ): Promise<ProjectPerformance[]> {

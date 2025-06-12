@@ -155,7 +155,8 @@ This repository now uses the built-in API routes from Next.js. The following end
 
 ### Usage
 
-1. Copy `.env.example` to `.env` and add your Paymo API key.
+1. Copy `.env.example` to `.env` and add your Paymo API key, or simply provide
+   the key on the login page when starting the interface.
 2. Install dependencies:
 
 ```bash
@@ -181,5 +182,7 @@ The server listens on port `3000` by default. Visit `http://localhost:3000/` for
 
 ### Troubleshooting
 
-If any request responds with `401 Unauthorized`, verify that the `PAYMO_API_KEY` in your `.env` file is correct. The API routes rely on this key to authenticate with Paymo.
+If any request responds with `401 Unauthorized`, ensure the API key you entered
+on login (or in your `.env` file) is correct. The API routes rely on this key to
+authenticate with Paymo.
 
