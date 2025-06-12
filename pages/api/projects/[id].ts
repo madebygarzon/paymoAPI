@@ -77,5 +77,6 @@ export default async function handler(
     } else {
       res.status(500).json({ error: 'Failed to fetch project details' });
     }
+
   }
 }

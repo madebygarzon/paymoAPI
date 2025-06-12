@@ -43,6 +43,7 @@ export default function Projects() {
   const loadDetails = (id: number) => {
     setLoadingId(id)
     fetch(`/api/projects/${id}`)
+
       .then(async (res) => {
         const body = await res.json().catch(() => null)
         if (!res.ok) throw new Error(body?.error || 'Request failed')
