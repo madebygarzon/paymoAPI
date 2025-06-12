@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import paymo from '../../../lib/paymo';
+import { createPaymoClient } from '../../../lib/paymo';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,6 +10,14 @@ export default async function handler(
     res.status(400).json({ error: 'Invalid project id' });
     return;
   }
+
+  const apiKey = req.cookies.paymo_api_key || process.env.PAYMO_API_KEY;
+  if (!apiKey) {
+    res.status(401).json({ error: 'API key not provided' });
+    return;
+  }
+
+  const paymo = createPaymoClient(apiKey);
 
   try {
     const { data } = await paymo.get(`/projects/${id}`, {
