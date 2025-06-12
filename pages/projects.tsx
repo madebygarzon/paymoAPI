@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Loader from './components/loader'
 
-type Project = {
+type ProjectSummary = {
   id: number
   name: string
   code: string
   client_name: string
   active: boolean
+  updated_on: string
+  color: string | null
+}
+
+type ProjectDetail = ProjectSummary & {
   budget_hours: number | null
   price_per_hour: number | null
   project_fee: number | null
@@ -16,12 +21,12 @@ type Project = {
   start_date: string | null
   end_date: string | null
   billing_type: string
-  updated_on: string
-  color: string | null
 }
 
 export default function Projects() {
-  const [data, setData] = useState<Project[] | null>(null)
+  const [data, setData] = useState<ProjectSummary[] | null>(null)
+  const [selected, setSelected] = useState<ProjectDetail | null>(null)
+  const [loadingId, setLoadingId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -33,6 +38,23 @@ export default function Projects() {
       .then(setData)
       .catch((err) => setError(err.message))
   }, [])
+
+  const loadDetails = (id: number) => {
+    setLoadingId(id)
+    fetch(`/api/projects/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Request failed')
+        return res.json()
+      })
+      .then((detail) => {
+        setSelected(detail)
+        setLoadingId(null)
+      })
+      .catch((err) => {
+        setError(err.message)
+        setLoadingId(null)
+      })
+  }
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
@@ -52,46 +74,84 @@ export default function Projects() {
               <th style={thStyle}>Name</th>
               <th style={thStyle}>Code</th>
               <th style={thStyle}>Client</th>
-              <th style={thStyle}>Start</th>
-              <th style={thStyle}>End</th>
-              <th style={thStyle}>Rate</th>
-              <th style={thStyle}>Fee</th>
-              <th style={thStyle}>Time Worked</th>
-              <th style={thStyle}>Budget Hours</th>
-              <th style={thStyle}>Recorded Time</th>
-              <th style={thStyle}>Billing</th>
               <th style={thStyle}>Updated</th>
+              <th style={thStyle}>Action</th>
             </tr>
           </thead>
           <tbody>
             {data.map((project) => (
               <tr key={project.id}>
                 <td style={tdStyle}>
-                  <span style={{
-                    display: 'inline-block',
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '50%',
-                    backgroundColor: project.color || '#ccc',
-                    marginRight: '8px'
-                  }} />
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      backgroundColor: project.color || '#ccc',
+                      marginRight: '8px'
+                    }}
+                  />
                   {project.name}
                 </td>
                 <td style={tdStyle}>{project.code}</td>
                 <td style={tdStyle}>{project.client_name}</td>
-                <td style={tdStyle}>{project.start_date ? new Date(project.start_date).toLocaleDateString() : '—'}</td>
-                <td style={tdStyle}>{project.end_date ? new Date(project.end_date).toLocaleDateString() : '—'}</td>
-                <td style={tdStyle}>{project.price_per_hour ?? '—'}</td>
-                <td style={tdStyle}>{project.project_fee?.toFixed(2) ?? '—'}</td>
-                <td style={tdStyle}>{(project.time_worked / 3600).toFixed(2)}</td>
-                <td style={tdStyle}>{project.budget_hours ?? '—'}</td>
-                <td style={tdStyle}>{(project.recorded_time / 3600).toFixed(2)}</td>
-                <td style={tdStyle}>{project.billing_type.toUpperCase()}</td>
                 <td style={tdStyle}>{new Date(project.updated_on).toLocaleDateString()}</td>
+                <td style={tdStyle}>
+                  <button onClick={() => loadDetails(project.id)} disabled={loadingId === project.id}>
+                    {loadingId === project.id ? 'Loading...' : 'View'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+      {selected && (
+        <div style={{ marginTop: '20px' }}>
+          <h2>Project Details</h2>
+          <table style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            marginTop: '10px',
+            fontSize: '14px'
+          }}>
+            <tbody>
+              <tr>
+                <td style={tdStyle}>Start</td>
+                <td style={tdStyle}>{selected.start_date ? new Date(selected.start_date).toLocaleDateString() : '—'}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>End</td>
+                <td style={tdStyle}>{selected.end_date ? new Date(selected.end_date).toLocaleDateString() : '—'}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>Rate</td>
+                <td style={tdStyle}>{selected.price_per_hour ?? '—'}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>Fee</td>
+                <td style={tdStyle}>{selected.project_fee?.toFixed(2) ?? '—'}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>Time Worked</td>
+                <td style={tdStyle}>{(selected.time_worked / 3600).toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>Budget Hours</td>
+                <td style={tdStyle}>{selected.budget_hours ?? '—'}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>Recorded Time</td>
+                <td style={tdStyle}>{(selected.recorded_time / 3600).toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>Billing</td>
+                <td style={tdStyle}>{selected.billing_type.toUpperCase()}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )
