@@ -146,7 +146,8 @@ Please tell us how we can make the API better. If you have a specific feature re
 
 This repository now uses the built-in API routes from Next.js. The following endpoints are available:
 
-* `/api/projects` – List all projects
+* `/api/projects` – List active projects
+* `/api/projects/[id]` – Retrieve project details on demand
 * `/api/entries` – Get time entries
 * `/api/invoices` – Retrieve invoices
 * `/api/reports` – Generate reports
