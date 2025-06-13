@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios';
+import { fetchAllTimeEntries } from './time';
 
 export interface ProjectPerformance {
   project_id: number;
@@ -35,18 +36,32 @@ export async function getProjectPerformance(
       const where = whereClauses.join(' and ');
 
       let totalSeconds = 0;
+      let entries: any[] = [];
       try {
-        const { data: entriesData } = await paymo.get('/entries', {
-          params: { where, include: 'task' },
+        entries = await fetchAllTimeEntries(paymo, {
+          where,
+          include: 'task',
         });
-        const entries = (entriesData as any).entries ?? entriesData ?? [];
-        totalSeconds = (entries as any[]).reduce(
-          (sum, e) => sum + (e.duration ?? 0),
-          0
-        );
       } catch {
-        // ignore errors fetching entries for a project
+        entries = [];
       }
+
+      if (!entries.length) {
+        try {
+          const { data: pData } = await paymo.get(`/projects/${project.id}`, {
+            params: { include: 'tasks.entries' },
+          });
+          const proj = (pData as any).projects?.[0] ?? pData;
+          entries = (proj.tasks || []).flatMap((t: any) => t.entries || []);
+        } catch {
+          entries = [];
+        }
+      }
+
+      totalSeconds = (entries as any[]).reduce(
+        (sum, e) => sum + (e.duration ?? 0),
+        0
+      );
 
       const loggedHours = totalSeconds / 3600;
 
