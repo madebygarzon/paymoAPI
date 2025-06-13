@@ -21,7 +21,7 @@ export default async function handler(
 
   try {
     const { data } = await paymo.get(`/projects/${id}`, {
-      params: { include: 'client,tasks.entries' },
+      params: { include: 'client' },
     });
     const p = (data as any).projects?.[0] ?? (data as any);
 
@@ -30,12 +30,35 @@ export default async function handler(
       return;
     }
 
-    let timeWorked = 0;
+    let timeWorked = typeof p.time_worked === 'number' ? p.time_worked : 0;
     let startDate: string | null = null;
     let endDate: string | null = null;
 
-    const tasks = p.tasks || [];
-    const entries = tasks.flatMap((t: any) => t.entries || []);
+    let entries: any[] = [];
+    try {
+      const { data: entriesData } = await paymo.get('/time_entries', {
+        params: { where: `project_id=${id}` },
+      });
+      entries =
+        (entriesData as any).time_entries ??
+        entriesData?.entries ??
+        entriesData ??
+        [];
+    } catch {
+      // ignore fetch errors here
+    }
+
+    if (!entries.length) {
+      try {
+        const { data: entData } = await paymo.get(`/projects/${id}`, {
+          params: { include: 'tasks.entries' },
+        });
+        const pEnt = (entData as any).projects?.[0] ?? entData;
+        entries = (pEnt.tasks || []).flatMap((t: any) => t.entries || []);
+      } catch {
+        entries = [];
+      }
+    }
 
     if (entries.length) {
       const startTimes = entries.map((e: any) =>
@@ -47,10 +70,12 @@ export default async function handler(
       startDate = new Date(Math.min(...startTimes)).toISOString();
       endDate = new Date(Math.max(...endTimes)).toISOString();
 
-      timeWorked = entries.reduce(
-        (total: number, e: any) => total + (e.duration || 0),
-        0
-      );
+      if (!p.time_worked) {
+        timeWorked = entries.reduce(
+          (total: number, e: any) => total + (e.duration || 0),
+          0
+        );
+      }
     }
 
     const projectRate = p.flat_billing ? p.price : p.price_per_hour;
@@ -70,7 +95,7 @@ export default async function handler(
       price_per_hour: p.price_per_hour ?? null,
       project_fee: projectFee,
       time_worked: timeWorked,
-      recorded_time: timeWorked,
+      recorded_time: typeof p.recorded_time === 'number' ? p.recorded_time : timeWorked,
       start_date: startDate ?? p.start_date ?? p.created_on,
       end_date: endDate ?? p.end_date ?? null,
       billing_type: billingType,
