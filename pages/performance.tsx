@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Loader from "./components/loader";
 import LogoutButton from "./components/logoutButton";
+import { formatDuration } from "../lib/time";
 
 interface Perf {
   project_id: number;
@@ -168,11 +169,11 @@ export default function Performance() {
                 </td>
                 <td style={tdStyle}>{p.status}</td>
                 <td style={tdStyle}>{p.budgeted_hours ?? "—"}</td>
-                <td style={tdStyle}>{p.total_logged_hours.toFixed(2)}</td>
+                <td style={tdStyle}>{formatDuration(p.total_logged_hours * 3600)}</td>
                 <td style={tdStyle}>
                   {p.budgeted_hours === null
                     ? "—"
-                    : (p.budgeted_hours - p.total_logged_hours).toFixed(2)}
+                    : formatDuration((p.budgeted_hours - p.total_logged_hours) * 3600)}
                 </td>
                 <td style={tdStyle}>${p.budgeted_cost.toFixed(2)}</td>
                 <td style={tdStyle}>${p.actual_cost.toFixed(2)}</td>

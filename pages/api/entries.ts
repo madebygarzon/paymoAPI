@@ -14,8 +14,8 @@ export default async function handler(
   const paymo = createPaymoClient(apiKey);
 
   try {
-    const { data } = await paymo.get('/entries');
-    res.status(200).json((data as any).entries || data);
+    const { data } = await paymo.get('/time_entries');
+    res.status(200).json((data as any).time_entries || (data as any).entries || data);
   } catch (err) {
     console.error((err as Error).message);
     res.status(500).json({ error: 'Failed to fetch entries' });

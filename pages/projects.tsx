@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Loader from './components/loader'
 import LogoutButton from './components/logoutButton'
+import { formatDuration } from '../lib/time'
 
 type ProjectSummary = {
   id: number
@@ -140,7 +141,7 @@ export default function Projects() {
               </tr>
               <tr>
                 <td style={tdStyle}>Time Worked</td>
-                <td style={tdStyle}>{(selected.time_worked / 3600).toFixed(2)}</td>
+                <td style={tdStyle}>{formatDuration(selected.time_worked)}</td>
               </tr>
               <tr>
                 <td style={tdStyle}>Budget Hours</td>
@@ -148,7 +149,7 @@ export default function Projects() {
               </tr>
               <tr>
                 <td style={tdStyle}>Recorded Time</td>
-                <td style={tdStyle}>{(selected.recorded_time / 3600).toFixed(2)}</td>
+                <td style={tdStyle}>{formatDuration(selected.recorded_time)}</td>
               </tr>
               <tr>
                 <td style={tdStyle}>Billing</td>
