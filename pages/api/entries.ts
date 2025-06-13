@@ -15,8 +15,10 @@ export default async function handler(
   const paymo = createPaymoClient(apiKey);
 
   try {
+
     const entries = await fetchAllTimeEntries(paymo, {});
     res.status(200).json(entries);
+
   } catch {
     try {
       const { data } = await paymo.get('/entries');
@@ -27,5 +29,7 @@ export default async function handler(
       console.error((err as Error).message);
       res.status(500).json({ error: 'Failed to fetch entries' });
     }
+
+
   }
 }

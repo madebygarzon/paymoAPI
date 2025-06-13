@@ -35,11 +35,13 @@ export default async function handler(
     let startDate: string | null = null;
     let endDate: string | null = null;
 
+
     let entries: any[] = [];
     try {
       entries = await fetchAllTimeEntries(paymo, { where: `project_id=${id}` });
     } catch {
       entries = [];
+
     }
 
     if (!entries.length) {
@@ -53,6 +55,8 @@ export default async function handler(
         entries = [];
       }
     }
+
+
 
     if (entries.length) {
       const startTimes = entries.map((e: any) =>

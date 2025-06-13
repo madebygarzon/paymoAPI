@@ -58,6 +58,7 @@ export async function getProjectPerformance(
         }
       }
 
+
       totalSeconds = (entries as any[]).reduce(
         (sum, e) => sum + (e.duration ?? 0),
         0
