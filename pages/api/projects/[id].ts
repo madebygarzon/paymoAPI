@@ -34,10 +34,10 @@ export default async function handler(
     let startDate: string | null = null;
     let endDate: string | null = null;
 
-    const { data: entriesData } = await paymo.get('/entries', {
+    const { data: entriesData } = await paymo.get('/time_entries', {
       params: { where: `project_id=${id}` },
     });
-    const entries = (entriesData as any).entries ?? entriesData ?? [];
+    const entries = (entriesData as any).time_entries ?? entriesData?.entries ?? entriesData ?? [];
 
     if (entries.length) {
       const startTimes = entries.map((e: any) =>

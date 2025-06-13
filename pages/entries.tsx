@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Loader from './components/loader'
 import LogoutButton from './components/logoutButton'
+import { formatDuration } from '../lib/time'
 
 type Entry = {
   id: number
@@ -57,7 +58,7 @@ export default function Entries() {
               <tr key={entry.id}>
                 <td style={tdStyle}>{entry.date}</td>
                 <td style={tdStyle}>{entry.task_id}</td>
-                <td style={tdStyle}>{(entry.duration / 3600).toFixed(2)}</td>
+                <td style={tdStyle}>{formatDuration(entry.duration)}</td>
                 <td style={tdStyle}>${entry.cost}</td>
                 <td style={tdStyle}>${entry.price}</td>
                 <td style={{ ...tdStyle, textTransform: 'capitalize' }}>{entry.status}</td>

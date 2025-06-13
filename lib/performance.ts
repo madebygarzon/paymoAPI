@@ -36,10 +36,10 @@ export async function getProjectPerformance(
 
       let totalSeconds = 0;
       try {
-        const { data: entriesData } = await paymo.get('/entries', {
+        const { data: entriesData } = await paymo.get('/time_entries', {
           params: { where, include: 'task' },
         });
-        const entries = (entriesData as any).entries ?? entriesData ?? [];
+        const entries = (entriesData as any).time_entries ?? entriesData?.entries ?? entriesData ?? [];
         totalSeconds = (entries as any[]).reduce(
           (sum, e) => sum + (e.duration ?? 0),
           0
