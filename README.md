@@ -98,6 +98,7 @@ The following response headers will help you with the current API usage:
 * [Project Statuses](sections/project_statuses.md)
 * [Projects](sections/projects.md)
 * [Reports](sections/reports.md)
+* [Time Worked por Proyecto](sections/time_worked.md)
 * [Subtasks](sections/subtasks.md)
 * [Sessions](sections/sessions.md)
 * [Task Lists](sections/tasklists.md)

@@ -1,0 +1,46 @@
+# Time Worked por Proyecto
+
+Esta guía explica cómo obtener las horas registradas para un proyecto mediante la API de Paymo.
+
+## 1. Endpoint
+
+Realiza una petición **POST** a `https://app.paymoapp.com/api/reports`.
+
+## 2. Autenticación
+
+Utiliza **Basic Auth** con tu API key (o correo) como nombre de usuario y la contraseña vacía (o tu contraseña de Paymo).
+
+## 3. Encabezados
+
+```
+Accept: application/json
+Content-Type: application/json
+```
+
+## 4. Cuerpo de la solicitud
+
+Envía un objeto JSON similar al siguiente. Reemplaza `3323471` con el ID de tu proyecto.
+
+```json
+{
+  "type": "temp",
+  "projects": [3323471],
+  "users": "all",
+  "date_interval": "all_time",
+  "include": { "projects": true }
+}
+```
+
+## 5. Leer el resultado
+
+La respuesta contendrá un arreglo `reports`. Accede a `reports[0].content.items` y busca el objeto cuyo `type` sea `"total"`. El campo `time` de ese objeto representa los segundos trabajados en total para el proyecto.
+
+Puedes convertir ese valor a horas y minutos con el siguiente código de ejemplo:
+
+```javascript
+const horas = Math.floor(time / 3600);
+const minutos = Math.floor((time % 3600) / 60);
+// => `${horas}h ${minutos}m`
+```
+
+Este tiempo coincide con la columna **Time Worked** que aparece en la pantalla de **Performance** de esta interfaz.
