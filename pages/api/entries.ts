@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createPaymoClient } from '../../lib/paymo';
+import { fetchAllTimeEntries } from '../../lib/time';
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,11 +15,10 @@ export default async function handler(
   const paymo = createPaymoClient(apiKey);
 
   try {
-    const { data } = await paymo.get('/time_entries');
 
-    res
-      .status(200)
-      .json((data as any).time_entries || (data as any).entries || data);
+    const entries = await fetchAllTimeEntries(paymo, {});
+    res.status(200).json(entries);
+
   } catch {
     try {
       const { data } = await paymo.get('/entries');
@@ -29,6 +29,7 @@ export default async function handler(
       console.error((err as Error).message);
       res.status(500).json({ error: 'Failed to fetch entries' });
     }
+
 
   }
 }

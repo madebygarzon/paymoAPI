@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createPaymoClient } from '../../../lib/paymo';
+import { fetchAllTimeEntries } from '../../../lib/time';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,16 +38,10 @@ export default async function handler(
 
     let entries: any[] = [];
     try {
-      const { data: entriesData } = await paymo.get('/time_entries', {
-        params: { where: `project_id=${id}` },
-      });
-      entries =
-        (entriesData as any).time_entries ??
-        entriesData?.entries ??
-        entriesData ??
-        [];
+      entries = await fetchAllTimeEntries(paymo, { where: `project_id=${id}` });
     } catch {
-      // ignore fetch errors here
+      entries = [];
+
     }
 
     if (!entries.length) {
@@ -60,6 +55,7 @@ export default async function handler(
         entries = [];
       }
     }
+
 
 
     if (entries.length) {

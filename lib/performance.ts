@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios';
+import { fetchAllTimeEntries } from './time';
 
 export interface ProjectPerformance {
   project_id: number;
@@ -37,16 +38,10 @@ export async function getProjectPerformance(
       let totalSeconds = 0;
       let entries: any[] = [];
       try {
-        const { data: entriesData } = await paymo.get('/time_entries', {
-          params: { where, include: 'task' },
+        entries = await fetchAllTimeEntries(paymo, {
+          where,
+          include: 'task',
         });
-
-        entries =
-          (entriesData as any).time_entries ??
-          entriesData?.entries ??
-          entriesData ??
-          [];
-
       } catch {
         entries = [];
       }
@@ -62,6 +57,7 @@ export async function getProjectPerformance(
           entries = [];
         }
       }
+
 
       totalSeconds = (entries as any[]).reduce(
         (sum, e) => sum + (e.duration ?? 0),
