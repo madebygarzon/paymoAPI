@@ -34,10 +34,33 @@ export default async function handler(
     let startDate: string | null = null;
     let endDate: string | null = null;
 
-    const { data: entriesData } = await paymo.get('/time_entries', {
-      params: { where: `project_id=${id}` },
-    });
-    const entries = (entriesData as any).time_entries ?? entriesData?.entries ?? entriesData ?? [];
+
+    let entries: any[] = [];
+    try {
+      const { data: entriesData } = await paymo.get('/time_entries', {
+        params: { where: `project_id=${id}` },
+      });
+      entries =
+        (entriesData as any).time_entries ??
+        entriesData?.entries ??
+        entriesData ??
+        [];
+    } catch {
+      // ignore fetch errors here
+    }
+
+    if (!entries.length) {
+      try {
+        const { data: entData } = await paymo.get(`/projects/${id}`, {
+          params: { include: 'tasks.entries' },
+        });
+        const pEnt = (entData as any).projects?.[0] ?? entData;
+        entries = (pEnt.tasks || []).flatMap((t: any) => t.entries || []);
+      } catch {
+        entries = [];
+      }
+    }
+
 
     if (entries.length) {
       const startTimes = entries.map((e: any) =>
