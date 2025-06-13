@@ -21,7 +21,7 @@ export default async function handler(
 
   try {
     const { data } = await paymo.get(`/projects/${id}`, {
-      params: { include: 'client,tasks.entries' },
+      params: { include: 'client' },
     });
     const p = (data as any).projects?.[0] ?? (data as any);
 
@@ -34,8 +34,10 @@ export default async function handler(
     let startDate: string | null = null;
     let endDate: string | null = null;
 
-    const tasks = p.tasks || [];
-    const entries = tasks.flatMap((t: any) => t.entries || []);
+    const { data: entriesData } = await paymo.get('/entries', {
+      params: { where: `project_id=${id}` },
+    });
+    const entries = (entriesData as any).entries ?? entriesData ?? [];
 
     if (entries.length) {
       const startTimes = entries.map((e: any) =>
