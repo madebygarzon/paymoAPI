@@ -110,7 +110,13 @@ export default function Performance() {
                 style={thStyle}
                 title="Hours that have already been worked and logged for the project."
               >
-                Logged Hours
+                Time Worked
+              </th>
+              <th
+                style={thStyle}
+                title="Difference between budgeted hours and time worked. Negative means overtime."
+              >
+                Overtime
               </th>
               <th
                 style={thStyle}
@@ -163,6 +169,11 @@ export default function Performance() {
                 <td style={tdStyle}>{p.status}</td>
                 <td style={tdStyle}>{p.budgeted_hours ?? "—"}</td>
                 <td style={tdStyle}>{p.total_logged_hours.toFixed(2)}</td>
+                <td style={tdStyle}>
+                  {p.budgeted_hours === null
+                    ? "—"
+                    : (p.budgeted_hours - p.total_logged_hours).toFixed(2)}
+                </td>
                 <td style={tdStyle}>${p.budgeted_cost.toFixed(2)}</td>
                 <td style={tdStyle}>${p.actual_cost.toFixed(2)}</td>
                 <td style={tdStyle}>${p.cost_variance.toFixed(2)}</td>
