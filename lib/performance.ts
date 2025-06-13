@@ -40,11 +40,13 @@ export async function getProjectPerformance(
         const { data: entriesData } = await paymo.get('/time_entries', {
           params: { where, include: 'task' },
         });
+
         entries =
           (entriesData as any).time_entries ??
           entriesData?.entries ??
           entriesData ??
           [];
+
       } catch {
         entries = [];
       }

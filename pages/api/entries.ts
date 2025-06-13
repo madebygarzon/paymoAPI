@@ -15,6 +15,7 @@ export default async function handler(
 
   try {
     const { data } = await paymo.get('/time_entries');
+
     res
       .status(200)
       .json((data as any).time_entries || (data as any).entries || data);
@@ -28,5 +29,6 @@ export default async function handler(
       console.error((err as Error).message);
       res.status(500).json({ error: 'Failed to fetch entries' });
     }
+
   }
 }
