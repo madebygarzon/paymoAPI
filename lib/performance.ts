@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios';
-import { fetchAllTimeEntries } from './time';
+import { fetchProjectWorkedSeconds } from './time';
 
 export interface ProjectPerformance {
   project_id: number;
@@ -30,41 +30,17 @@ export async function getProjectPerformance(
 
   const summaries: ProjectPerformance[] = await Promise.all(
     (projects as any[]).map(async (project) => {
-      const whereClauses = [`project_id=${project.id}`];
-      if (from) whereClauses.push(`date>="${from}"`);
-      if (to) whereClauses.push(`date<="${to}"`);
-      const where = whereClauses.join(' and ');
-
-      let totalSeconds = 0;
-      let entries: any[] = [];
-      try {
-        entries = await fetchAllTimeEntries(paymo, {
-          where,
-          include: 'task',
-        });
-      } catch {
-        entries = [];
-      }
-
-      if (!entries.length) {
-        try {
-          const { data: pData } = await paymo.get(`/projects/${project.id}`, {
-            params: { include: 'tasks.entries' },
-          });
-          const proj = (pData as any).projects?.[0] ?? pData;
-          entries = (proj.tasks || []).flatMap((t: any) => t.entries || []);
-        } catch {
-          entries = [];
-        }
-      }
-
-
-      totalSeconds = (entries as any[]).reduce(
-        (sum, e) => sum + (e.duration ?? 0),
-        0
+      const totalSeconds = await fetchProjectWorkedSeconds(
+        paymo,
+        project.id,
+        from,
+        to
       );
 
-      const loggedHours = totalSeconds / 3600;
+      let loggedHours = totalSeconds / 3600;
+      if (!totalSeconds && typeof project.recorded_time === 'number') {
+        loggedHours = project.recorded_time / 3600;
+      }
 
       // compute budget hours
       let budgetHours = project.budget_hours ?? 0;

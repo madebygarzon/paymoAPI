@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createPaymoClient } from '../../../lib/paymo';
-import { fetchAllTimeEntries } from '../../../lib/time';
+import { fetchProjectWorkedSeconds } from '../../../lib/time';
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,50 +31,12 @@ export default async function handler(
       return;
     }
 
-    let timeWorked = typeof p.time_worked === 'number' ? p.time_worked : 0;
-    let startDate: string | null = null;
-    let endDate: string | null = null;
-
-
-    let entries: any[] = [];
-    try {
-      entries = await fetchAllTimeEntries(paymo, { where: `project_id=${id}` });
-    } catch {
-      entries = [];
-
-    }
-
-    if (!entries.length) {
-      try {
-        const { data: entData } = await paymo.get(`/projects/${id}`, {
-          params: { include: 'tasks.entries' },
-        });
-        const pEnt = (entData as any).projects?.[0] ?? entData;
-        entries = (pEnt.tasks || []).flatMap((t: any) => t.entries || []);
-      } catch {
-        entries = [];
-      }
-    }
-
-
-
-    if (entries.length) {
-      const startTimes = entries.map((e: any) =>
-        new Date(e.start_time ?? e.date).getTime()
-      );
-      const endTimes = entries.map((e: any) =>
-        new Date(e.end_time ?? e.start_time ?? e.date).getTime()
-      );
-      startDate = new Date(Math.min(...startTimes)).toISOString();
-      endDate = new Date(Math.max(...endTimes)).toISOString();
-
-      if (!p.time_worked) {
-        timeWorked = entries.reduce(
-          (total: number, e: any) => total + (e.duration || 0),
-          0
-        );
-      }
-    }
+  let timeWorked = await fetchProjectWorkedSeconds(paymo, Number(id));
+  if (!timeWorked && typeof p.recorded_time === 'number') {
+    timeWorked = p.recorded_time;
+  }
+  const startDate: string | null = p.start_date ?? p.created_on;
+  const endDate: string | null = p.end_date ?? null;
 
     const projectRate = p.flat_billing ? p.price : p.price_per_hour;
     const billingType =
