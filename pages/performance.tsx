@@ -3,6 +3,8 @@ import Link from "next/link";
 import Loader from "./components/loader";
 import LogoutButton from "./components/logoutButton";
 import { formatDuration } from "../lib/time";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+
 
 interface Perf {
   project_id: number;
@@ -129,7 +131,9 @@ export default function Performance() {
               <td style={tdStyle}>
                 {data.budgeted_hours === null
                   ? "—"
-                  : formatDuration((data.budgeted_hours - data.total_logged_hours) * 3600)}
+                  : data.total_logged_hours > data.budgeted_hours
+                  ? formatDuration((data.total_logged_hours - data.budgeted_hours) * 3600)
+                  : "0h 0m"}
               </td>
               <td style={tdStyle}>${data.budgeted_cost.toFixed(2)}</td>
               <td style={tdStyle}>${data.actual_cost.toFixed(2)}</td>
@@ -138,7 +142,10 @@ export default function Performance() {
             </tr>
           </tbody>
         </table>
+        
       )}
+      
+      
     </div>
   );
 }
