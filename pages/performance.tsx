@@ -16,28 +16,57 @@ interface Perf {
   status: string;
 }
 
+interface ProjectOption {
+  id: number;
+  name: string;
+}
+
 export default function Performance() {
-  const [data, setData] = useState<Perf[] | null>(null);
+  const [projects, setProjects] = useState<ProjectOption[]>([]);
+  const [selectedId, setSelectedId] = useState<number | "">("");
+  const [data, setData] = useState<Perf | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [filter, setFilter] = useState<string>("");
 
   useEffect(() => {
-    fetch("/api/performance")
+    fetch("/api/projects")
       .then(async (res) => {
         const body = await res.json().catch(() => null);
         if (!res.ok) throw new Error(body?.error || "Request failed");
-        return body;
+        return body as ProjectOption[];
       })
-      .then(setData)
+      .then(setProjects)
       .catch((err) => setError(err.message));
   }, []);
 
-  const filteredData = data?.filter((p) => {
-    const matchesName = p.name.toLowerCase().includes(filter.toLowerCase());
-    const matchesStatus = statusFilter === "" || p.status === statusFilter;
-    return matchesName && matchesStatus;
-  });
+  const loadPerformance = (id: number) => {
+    setLoading(true);
+    setData(null);
+    fetch(`/api/performance/${id}`)
+      .then(async (res) => {
+        const body = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(body?.error || "Request failed");
+        return body as Perf;
+      })
+      .then((perf) => {
+        setData(perf);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  };
+
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedId(value ? Number(value) : "");
+    if (value) {
+      loadPerformance(Number(value));
+    } else {
+      setData(null);
+    }
+  };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -47,41 +76,29 @@ export default function Performance() {
       </Link>
       <LogoutButton />
 
-      <div style={{ marginTop: "20px", marginBottom: "10px", display: "flex" }}>
-        <input
-          type="text"
-          placeholder="Search project..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+      <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+        <select
+          value={selectedId}
+          onChange={handleSelect}
           style={{
             padding: "6px 12px",
             border: "1px solid #ccc",
             borderRadius: "4px",
-            width: "250px",
+            minWidth: "250px",
           }}
-        />
-
-        <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            style={{
-              padding: "6px 12px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              marginLeft: "10px",
-            }}
-          >
-            <option value="">All statuses</option>
-            <option value="Within budget">Within budget</option>
-            <option value="Over budget">Over budget</option>
-          </select>
-        </div>
+        >
+          <option value="">Select project</option>
+          {projects.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
-      {!data && !error && <Loader />}
-      {filteredData && (
+      {loading && <Loader />}
+      {data && !loading && (
         <table
           style={{
             width: "100%",
@@ -92,97 +109,33 @@ export default function Performance() {
         >
           <thead>
             <tr style={{ backgroundColor: "#f0f0f0" }}>
-              <th style={thStyle} title="Name of the project.">
-                Project
-              </th>
-              <th
-                style={thStyle}
-                title="Project status regarding budget: 'Over budget' (exceeded) or 'Within budget'."
-              >
-                Status
-              </th>
-              <th
-                style={thStyle}
-                title="Estimated hours allocated as the budget for the project. If '—' appears, no hours were defined."
-              >
-                Budgeted Hours
-              </th>
-              <th
-                style={thStyle}
-                title="Hours that have already been worked and logged for the project."
-              >
-                Time Worked
-              </th>
-              <th
-                style={thStyle}
-                title="Difference between budgeted hours and time worked. Negative means overtime."
-              >
-                Overtime
-              </th>
-              <th
-                style={thStyle}
-                title="Estimated monetary budget for the project."
-              >
-                Budgeted Cost
-              </th>
-              <th
-                style={thStyle}
-                title="Actual cost incurred so far (how much has been spent)."
-              >
-                Actual Cost
-              </th>
-              <th
-                style={thStyle}
-                title="Difference between budgeted and actual cost. Negative means overspending, positive means savings."
-              >
-                Cost Variance
-              </th>
-              <th
-                style={thStyle}
-                title="Cost Performance Index. Calculated as: Budgeted Cost / Actual Cost. A value less than 1 indicates overspending."
-              >
-                CPI
-              </th>
+              <th style={thStyle}>Project</th>
+              <th style={thStyle}>Status</th>
+              <th style={thStyle}>Budgeted Hours</th>
+              <th style={thStyle}>Time Worked</th>
+              <th style={thStyle}>Overtime</th>
+              <th style={thStyle}>Budgeted Cost</th>
+              <th style={thStyle}>Actual Cost</th>
+              <th style={thStyle}>Cost Variance</th>
+              <th style={thStyle}>CPI</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((p) => (
-              <tr key={p.project_id}>
-                <td style={tdStyle}>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: "10px",
-                      height: "10px",
-                      borderRadius: "50%",
-                      backgroundColor:
-                        p.status === "Over budget" ? "red" : "green",
-                      marginRight: "8px",
-                    }}
-                    title={
-                      p.status === "Over budget"
-                        ? "Over budget"
-                        : "Within budget"
-                    }
-                  ></span>
-                  {p.name}
-                </td>
-                <td style={tdStyle}>{p.status}</td>
-                <td style={tdStyle}>{p.budgeted_hours ?? "—"}</td>
-                <td style={tdStyle}>{formatDuration(p.total_logged_hours * 3600)}</td>
-                <td style={tdStyle}>
-                  {p.budgeted_hours === null
-                    ? "—"
-                    : formatDuration((p.budgeted_hours - p.total_logged_hours) * 3600)}
-                </td>
-                <td style={tdStyle}>${p.budgeted_cost.toFixed(2)}</td>
-                <td style={tdStyle}>${p.actual_cost.toFixed(2)}</td>
-                <td style={tdStyle}>${p.cost_variance.toFixed(2)}</td>
-                <td style={tdStyle}>
-                  {p.cost_performance_index?.toFixed(2) ?? "—"}
-                </td>
-              </tr>
-            ))}
+            <tr>
+              <td style={tdStyle}>{data.name}</td>
+              <td style={tdStyle}>{data.status}</td>
+              <td style={tdStyle}>{data.budgeted_hours ?? "—"}</td>
+              <td style={tdStyle}>{formatDuration(data.total_logged_hours * 3600)}</td>
+              <td style={tdStyle}>
+                {data.budgeted_hours === null
+                  ? "—"
+                  : formatDuration((data.budgeted_hours - data.total_logged_hours) * 3600)}
+              </td>
+              <td style={tdStyle}>${data.budgeted_cost.toFixed(2)}</td>
+              <td style={tdStyle}>${data.actual_cost.toFixed(2)}</td>
+              <td style={tdStyle}>${data.cost_variance.toFixed(2)}</td>
+              <td style={tdStyle}>{data.cost_performance_index?.toFixed(2) ?? "—"}</td>
+            </tr>
           </tbody>
         </table>
       )}
