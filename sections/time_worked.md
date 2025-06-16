@@ -35,7 +35,9 @@ Envía un objeto JSON similar al siguiente. Reemplaza `3323471` con el ID de tu 
 
 La respuesta contendrá un arreglo `reports`. Accede a `reports[0].content.items` y busca el objeto cuyo `type` sea `"total"`. El campo `time` de ese objeto representa los segundos trabajados en total para el proyecto.
 
+
 En el caso del proyecto con ID `3323471`, el valor recibido es `2681075` segundos, que corresponden a **744h 44m** de trabajo.
+
 
 Un fragmento de la respuesta luce así:
 

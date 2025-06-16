@@ -35,6 +35,7 @@ export default async function handler(
   if (!timeWorked && typeof p.recorded_time === 'number') {
     timeWorked = p.recorded_time;
   }
+
   const startDate: string | null = p.start_date ?? p.created_on;
   const endDate: string | null = p.end_date ?? null;
 
