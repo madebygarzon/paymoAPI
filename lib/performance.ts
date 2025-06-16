@@ -37,7 +37,10 @@ export async function getProjectPerformance(
         to
       );
 
-      const loggedHours = totalSeconds / 3600;
+      let loggedHours = totalSeconds / 3600;
+      if (!totalSeconds && typeof project.recorded_time === 'number') {
+        loggedHours = project.recorded_time / 3600;
+      }
 
       // compute budget hours
       let budgetHours = project.budget_hours ?? 0;

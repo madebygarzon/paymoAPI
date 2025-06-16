@@ -67,3 +67,5 @@ const resultado = `${horas}h ${minutos}m`;
 ```
 
 Este tiempo coincide con la columna **Time Worked** que aparece en la pantalla de **Performance** de esta interfaz.
+
+Si la petición al endpoint de *reports* falla o devuelve `0` segundos, la aplicación toma el valor del campo `recorded_time` obtenido al consultar el proyecto con `/projects/{id}`.
