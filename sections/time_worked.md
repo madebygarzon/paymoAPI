@@ -35,6 +35,23 @@ Envía un objeto JSON similar al siguiente. Reemplaza `3323471` con el ID de tu 
 
 La respuesta contendrá un arreglo `reports`. Accede a `reports[0].content.items` y busca el objeto cuyo `type` sea `"total"`. El campo `time` de ese objeto representa los segundos trabajados en total para el proyecto.
 
+Un fragmento de la respuesta luce así:
+
+```json
+{
+  "reports": [
+    {
+      "content": {
+        "items": [
+          { "type": "project", "time": 2681075, "title": "Mi Proyecto" },
+          { "type": "total", "time": 2681075, "pct": 100 }
+        ]
+      }
+    }
+  ]
+}
+```
+
 Puedes convertir ese valor a horas y minutos con el siguiente código de ejemplo:
 
 ```javascript
