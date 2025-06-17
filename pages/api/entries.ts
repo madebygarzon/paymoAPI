@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createPaymoClient } from '../../lib/paymo';
-import { fetchAllTimeEntries } from '../../lib/time';
+// import { fetchAllTimeEntries } from '../../lib/time';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,8 +16,8 @@ export default async function handler(
 
   try {
 
-    const entries = await fetchAllTimeEntries(paymo, {});
-    res.status(200).json(entries);
+    // const entries = await fetchAllTimeEntries(paymo, {});
+    // res.status(200).json(entries);
 
   } catch {
     try {
